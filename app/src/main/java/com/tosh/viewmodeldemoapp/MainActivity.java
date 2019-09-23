@@ -2,13 +2,14 @@ package com.tosh.viewmodeldemoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        Button bRandom = findViewById(R.id.bRandom);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -34,12 +35,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView mTextView = findViewById(R.id.tvNumber);
-        MainActivityDataGenerator model = ViewModelProviders.of(this)
-                .get(MainActivityDataGenerator.class);
+        final TextView mTextView = findViewById(R.id.tvNumber);
+        final MainActivityViewModel model = ViewModelProviders.of(this)
+                .get(MainActivityViewModel.class);
 
-        String myRandomNumber = model.getNumber();
-        mTextView.setText(myRandomNumber);
+        final LiveData<String> myRandomNumber = model.getNumber();
+        myRandomNumber.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                mTextView.setText(s);
+            }
+        });
+
+        bRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 model.createNumber();
+            }
+        });
+
 
         Log.i(TAG, "Random Number set");
 

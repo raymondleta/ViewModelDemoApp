@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ViewModelDemoApp</string>
     <string name="random_number">12345</string>
+    <string name="fetch">Fetch</string>
 </resources>
